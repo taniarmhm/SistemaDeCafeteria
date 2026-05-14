@@ -1,56 +1,77 @@
+/*==========================================*/
+/*   MÓDULO 03 - CLIENTE: Menú en consola  */
+/*==========================================*/
+
 const prompt = require("prompt-sync")();
+
+/* Importar catálogo desde Cocina.js */
+const { catalogo } = require("../cocina/Cocina");
+
+/* Importar funciones de Caja.js */
+const { agregarPedido, verPedidos, modificarPedido, eliminarPedido, cobrar } = require("../caja/Caja");
+
+/*==========================================*/
+/* Funciones - Mostrar menús en consola     */
+/* Usando console.log y template strings    */
+/*==========================================*/
+
+function mostrarCatalogo() {
+    console.log("\n====================");
+    console.log("    CAFETERIA");
+    console.log("====================");
+
+    catalogo.forEach((producto, index) => {
+        console.log(`  ${index + 1}. ${producto.nombre.padEnd(20)} $${producto.precio}`);
+    });
+
+    console.log("====================");
+}
+
+function mostrarMenuPrincipal() {
+    console.log("\n==============================");
+    console.log("        MENU PRINCIPAL        ");
+    console.log("==============================");
+    console.log("  1. Agregar pedido   (CREATE)");
+    console.log("  2. Ver pedidos      (READ)  ");
+    console.log("  3. Modificar pedido (UPDATE)");
+    console.log("  4. Eliminar pedido  (DELETE)");
+    console.log("  5. Cobrar                   ");
+    console.log("  0. Salir                    ");
+    console.log("==============================");
+}
+
+/*==========================================*/
+/* Ejecución principal - Ciclo while        */
+/*==========================================*/
 
 let opcion = -1;
 
-while(opcion != 0){
+while (opcion != 0) {
 
-    console.log("\n====================");
-    console.log("CAFETERIA");
-    console.log("====================");
-    console.log("1. Cafe Americano");
-    console.log("2. Capuccino");
-    console.log("3. Frappe");
-    console.log("4. Dona");
-    console.log("5. Pastel");
-    console.log("6. Sandwich");
-    console.log("7. Sincronizadas");
-    console.log("0. Salir");
+    mostrarMenuPrincipal();
+    opcion = prompt("Selecciona una opcion: ");
 
-    opcion = prompt("Selecciona opcion: ");
+    if (opcion == 1) {
+        mostrarCatalogo();
+        let producto = prompt("¿Qué producto deseas agregar? (numero): ");
+        agregarPedido(producto);
 
-    if(opcion == 1){
-        console.log("Cafe Americano agregado");
-    }
+    } else if (opcion == 2) {
+        verPedidos();
 
-    else if(opcion == 2){
-        console.log("Capuccino agregado");
-    }
+    } else if (opcion == 3) {
+        modificarPedido(mostrarCatalogo);
 
-    else if(opcion == 3){
-        console.log("Frappe agregado");
-    }
+    } else if (opcion == 4) {
+        eliminarPedido();
 
-    else if(opcion == 4){
-        console.log("Dona agregada");
-    }
+    } else if (opcion == 5) {
+        cobrar();
 
-    else if(opcion == 5){
-        console.log("Pastel agregado");
-    }
+    } else if (opcion == 0) {
+        console.log("\nGracias, hasta luego!\n");
 
-    else if(opcion == 6){
-        console.log("Sandwich agregado");
-    }
-
-    else if(opcion == 7){
-        console.log("Sincronizadas agregadas");
-    }
-
-    else if(opcion == 0){
-        console.log("Gracias por su compra");
-    }
-
-    else{
-        console.log("Opcion invalida");
+    } else {
+        console.log(" Opcion invalida, intenta de nuevo.");
     }
 }
