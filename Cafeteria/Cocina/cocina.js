@@ -1,169 +1,232 @@
-//   SISTEMA DE CAJA CAFETERÍA
-// ==============================
+//   MÓDULO COCINA - CATÁLOGO
+// ======================================
 
 const prompt = require("prompt-sync")();
 
-const pedidos = [];
+// CATÁLOGO DE PRODUCTOS
+
+const catalogo = [
+
+{
+    id: 1,
+    nombre: "Café Cappuccino",
+    categoria: "Bebida",
+    precio: 35,
+    detalle: "Mediano"
+},
+
+{
+    id: 2,
+    nombre: "Café Americano",
+    categoria: "Bebida",
+    precio: 40,
+    detalle: "Mediano"
+},
+
+{
+    id: 3,
+    nombre: "Pastel de chocolate",
+    categoria: "Postre",
+    precio: 50,
+    detalle: "Rebanada individual"
+},
+
+{
+    id: 4,
+    nombre: "Galletas de mantequilla",
+    categoria: "Postre",
+    precio: 35,
+    detalle: "4 piezas"
+},
+
+{
+    id: 5,
+    nombre: "Sándwich de pollo",
+    categoria: "Comida",
+    precio: 55,
+    detalle: "Individual"
+},
+
+{
+    id: 6,
+    nombre: "Sincronizadas",
+    categoria: "Comida",
+    precio: 45,
+    detalle: "2 piezas"
+}
+
+];
 
 let opcion = -1;
-let contadorID = 1;
 
+// MOSTRAR CATÁLOGO
 
-// ==============================
-// CREATE - CREAR PEDIDO
-// ==============================
-function agregarPedido() {
+function mostrarCatalogo(){
 
-    let nombre = prompt("Nombre del producto: ");
-    let precio = Number(prompt("Precio: $"));
+    console.log("\n===== CATÁLOGO DE PRODUCTOS =====");
 
-    pedidos.push({
-        id: contadorID,
-        nombre: nombre,
-        precio: precio
-    });
-
-    contadorID++;
-
-    console.log("Producto agregado.");
-}
-
-
-// ==============================
-// READ - MOSTRAR PEDIDOS
-// ==============================
-function mostrarPedidos() {
-
-    console.log("\n===== TICKET =====");
-
-    let total = 0;
-
-    if (pedidos.length === 0) {
-        console.log("No hay pedidos.");
-        return 0;
-    }
-
-    for (let i = 0; i < pedidos.length; i++) {
+    for(let i = 0; i < catalogo.length; i++){
 
         console.log(
-            "ID: " + pedidos[i].id +
-            " | " + pedidos[i].nombre +
-            " - $" + pedidos[i].precio
+            "ID: " + catalogo[i].id +
+            " | " + catalogo[i].nombre +
+            " | " + catalogo[i].categoria +
+            " | $" + catalogo[i].precio +
+            " | " + catalogo[i].detalle
         );
-
-        total += pedidos[i].precio;
-    }
-
-    console.log("------------------");
-    console.log("TOTAL: $" + total);
-
-    return total;
-}
-
-
-// ==============================
-// UPDATE - ACTUALIZAR PEDIDO
-// ==============================
-function actualizarPedido() {
-
-    mostrarPedidos();
-
-    let idBuscar = Number(prompt("ID del pedido a actualizar: "));
-
-    let pedido = pedidos.find(p => p.id === idBuscar);
-
-    if (pedido) {
-
-        pedido.nombre = prompt("Nuevo nombre: ");
-        pedido.precio = Number(prompt("Nuevo precio: $"));
-
-        console.log("Pedido actualizado.");
-    } 
-    else {
-        console.log("ID no encontrado.");
     }
 }
 
+// FILTER - PRODUCTOS BARATOS
 
-// ==============================
-// DELETE - ELIMINAR PEDIDO
-// ==============================
-function eliminarPedido() {
+function productosBaratos(){
 
-    mostrarPedidos();
+    let baratos = catalogo.filter(
+        producto => producto.precio <= 40
+    );
 
-    let idBuscar = Number(prompt("ID del pedido a eliminar: "));
+    console.log("\n===== PRODUCTOS BARATOS =====");
 
-    let posicion = pedidos.findIndex(p => p.id === idBuscar);
+    baratos.forEach(producto => {
 
-    if (posicion !== -1) {
+        console.log(
+            producto.nombre +
+            " - $" + producto.precio
+        );
+    });
+}
 
-        pedidos.splice(posicion, 1);
+// FILTER - PRODUCTOS CAROS
 
-        console.log("Pedido eliminado.");
-    } 
-    else {
-        console.log("ID no encontrado.");
-    }
+function productosCaros(){
+
+    let caros = catalogo.filter(
+        producto => producto.precio >= 50
+    );
+
+    console.log("\n===== PRODUCTOS CAROS =====");
+
+    caros.forEach(producto => {
+
+        console.log(
+            producto.nombre +
+            " - $" + producto.precio
+        );
+    });
+}
+
+// FILTER - BUSCAR BEBIDAS
+
+function buscarBebidas(){
+
+    let bebidas = catalogo.filter(
+        producto => producto.categoria === "Bebida"
+    );
+
+    console.log("\n===== BEBIDAS =====");
+
+    bebidas.forEach(producto => {
+
+        console.log(
+            producto.nombre +
+            " - $" + producto.precio
+        );
+    });
+}
+
+// FILTER - BUSCAR POSTRES
+
+function buscarPostres(){
+
+    let postres = catalogo.filter(
+        producto => producto.categoria === "Postre"
+    );
+
+    console.log("\n===== POSTRES =====");
+
+    postres.forEach(producto => {
+
+        console.log(
+            producto.nombre +
+            " - $" + producto.precio
+        );
+    });
 }
 
 
-// ==============================
-// COBRAR
-// ==============================
-function cobrar() {
+// FIND - BUSCAR PRODUCTO POR ID
 
-    let total = mostrarPedidos();
+function buscarProductoPorID(){
 
-    if (total > 0) {
+    let idBuscar = Number(
+        prompt("Ingresa ID del producto: ")
+    );
 
-        let pago = Number(prompt("Pago del cliente: $"));
+    let producto = catalogo.find(
+        producto => producto.id === idBuscar
+    );
 
-        let cambio = pago - total;
+    console.log("\n===== RESULTADO =====");
 
-        console.log("Cambio: $" + cambio);
-        console.log("Gracias por su compra.");
+    if(producto){
+
+        console.log(
+            "ID: " + producto.id +
+            " | " + producto.nombre +
+            " | " + producto.categoria +
+            " | $" + producto.precio +
+            " | " + producto.detalle
+        );
+    }
+
+    else{
+        console.log("Producto no encontrado.");
     }
 }
 
-
-// ==============================
 // MENÚ PRINCIPAL
-// ==============================
-while (opcion != 0) {
 
-    console.log("\n====================");
-    console.log("CAJA CAFETERÍA");
-    console.log("====================");
-    console.log("1. Agregar pedido");
-    console.log("2. Mostrar pedidos");
-    console.log("3. Actualizar pedido");
-    console.log("4. Eliminar pedido");
-    console.log("5. Cobrar");
+while(opcion != 0){
+
+    console.log("\n========================");
+    console.log("MÓDULO COCINA");
+    console.log("========================");
+    console.log("1. Mostrar catálogo");
+    console.log("2. Productos baratos");
+    console.log("3. Productos caros");
+    console.log("4. Buscar bebidas");
+    console.log("5. Buscar postres");
+    console.log("6. Buscar producto por ID");
     console.log("0. Salir");
 
-    opcion = Number(prompt("Selecciona opción: "));
+    opcion = Number(
+        prompt("Selecciona opción: ")
+    );
 
-    switch (opcion) {
+    switch(opcion){
 
         case 1:
-            agregarPedido();
+            mostrarCatalogo();
             break;
 
         case 2:
-            mostrarPedidos();
+            productosBaratos();
             break;
 
         case 3:
-            actualizarPedido();
+            productosCaros();
             break;
 
         case 4:
-            eliminarPedido();
+            buscarBebidas();
             break;
 
         case 5:
-            cobrar();
+            buscarPostres();
+            break;
+
+        case 6:
+            buscarProductoPorID();
             break;
 
         case 0:
