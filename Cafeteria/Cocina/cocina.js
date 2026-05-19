@@ -224,7 +224,6 @@ while(opcion != 0){
         case 5:
             buscarPostres();
             break;
-
         case 6:
             buscarProductoPorID();
             break;
