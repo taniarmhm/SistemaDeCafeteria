@@ -1,180 +1,169 @@
-//   MÓDULO COCINA - CRUD CATÁLOGO
+//   SISTEMA DE CAJA CAFETERÍA
+// ==============================
 
 const prompt = require("prompt-sync")();
 
-
-//Catálogo de productos
-
-const catalogo = [
-
-{
-    id: "01",
-    nombre: "Café Cappuccino",
-    categoria: "Bebida",
-    precio: 35,
-    detalle: "Mediano"
-},
-
-{
-    id: "02",
-    nombre: "Café Americano",
-    categoria: "Bebida",
-    precio: 40,
-    detalle: "Mediano"
-},
-
-{
-    id: "03",
-    nombre: "Pastel de chocolate",
-    categoria: "Postre",
-    precio: 50,
-    detalle: "Rebanada individual"
-},
-
-{
-    id: "04",
-    nombre: "Galletas de mantequilla",
-    categoria: "Postre",
-    precio: 35,
-    detalle: "4 piezas"
-},
-
-{
-    id: "05",
-    nombre: "Sandwich de jamón",
-    categoria: "Comida",
-    precio: 55,
-    detalle: "Individual"
-},
-
-{
-    id: "06",
-    nombre: "Sincronizadas",
-    categoria: "Comida",
-    precio: 45,
-    detalle: "2 piezas"
-}
-
-];
+const pedidos = [];
 
 let opcion = -1;
+let contadorID = 1;
 
 
-// Crear producto
-function agregarProducto(){
+// ==============================
+// CREATE - CREAR PEDIDO
+// ==============================
+function agregarPedido() {
 
-    let id = prompt("ID: ");
-    let nombre = prompt("Nombre: ");
-    let categoria = prompt("Categoría: ");
+    let nombre = prompt("Nombre del producto: ");
     let precio = Number(prompt("Precio: $"));
-    let detalle = prompt("Detalle: ");
 
-    catalogo.push({
-        id: id,
+    pedidos.push({
+        id: contadorID,
         nombre: nombre,
-        categoria: categoria,
-        precio: precio,
-        detalle: detalle
+        precio: precio
     });
+
+    contadorID++;
 
     console.log("Producto agregado.");
 }
 
 
-// Mostrar/Leer catálogo
-function mostrarCatalogo(){
+// ==============================
+// READ - MOSTRAR PEDIDOS
+// ==============================
+function mostrarPedidos() {
 
-    console.log("\n===== CATÁLOGO =====");
+    console.log("\n===== TICKET =====");
 
-    for(let i = 0; i < catalogo.length; i++){
+    let total = 0;
+
+    if (pedidos.length === 0) {
+        console.log("No hay pedidos.");
+        return 0;
+    }
+
+    for (let i = 0; i < pedidos.length; i++) {
 
         console.log(
-            (i + 1) + ". " +
-            catalogo[i].id + " | " +
-            catalogo[i].nombre + " | " +
-            catalogo[i].categoria + " | $" +
-            catalogo[i].precio + " | " +
-            catalogo[i].detalle
+            "ID: " + pedidos[i].id +
+            " | " + pedidos[i].nombre +
+            " - $" + pedidos[i].precio
         );
+
+        total += pedidos[i].precio;
     }
 
-    console.log("Total productos: " + catalogo.length);
+    console.log("------------------");
+    console.log("TOTAL: $" + total);
+
+    return total;
 }
 
 
-// Actualizar producto
+// ==============================
+// UPDATE - ACTUALIZAR PEDIDO
+// ==============================
+function actualizarPedido() {
 
-function actualizarProducto(){
+    mostrarPedidos();
 
-    mostrarCatalogo();
+    let idBuscar = Number(prompt("ID del pedido a actualizar: "));
 
-    let posicion = Number(prompt("Número de producto a actualizar: ")) - 1;
+    let pedido = pedidos.find(p => p.id === idBuscar);
 
-    if(posicion >= 0 && posicion < catalogo.length){
+    if (pedido) {
 
-        catalogo[posicion].nombre = prompt("Nuevo nombre: ");
-        catalogo[posicion].categoria = prompt("Nueva categoría: ");
-        catalogo[posicion].precio = Number(prompt("Nuevo precio: $"));
-        catalogo[posicion].detalle = prompt("Nuevo detalle: ");
+        pedido.nombre = prompt("Nuevo nombre: ");
+        pedido.precio = Number(prompt("Nuevo precio: $"));
 
-        console.log("Producto actualizado.");
-    }
-    else{
-        console.log("Número inválido.");
-    }
-}
-
-
-// Eliminar producto
-
-function eliminarProducto(){
-
-    mostrarCatalogo();
-
-    let posicion = Number(prompt("Número de producto a eliminar: ")) - 1;
-
-    if(posicion >= 0 && posicion < catalogo.length){
-
-        catalogo.splice(posicion, 1);
-
-        console.log("Producto eliminado.");
-    }
-    else{
-        console.log("Número inválido.");
+        console.log("Pedido actualizado.");
+    } 
+    else {
+        console.log("ID no encontrado.");
     }
 }
 
 
-// MENÚ Cocina
-while(opcion != 0){
+// ==============================
+// DELETE - ELIMINAR PEDIDO
+// ==============================
+function eliminarPedido() {
 
-    console.log("\n=======================");
-    console.log("MÓDULO COCINA");
-    console.log("=======================");
-    console.log("1. Agregar producto");
-    console.log("2. Mostrar catálogo");
-    console.log("3. Actualizar producto");
-    console.log("4. Eliminar producto");
+    mostrarPedidos();
+
+    let idBuscar = Number(prompt("ID del pedido a eliminar: "));
+
+    let posicion = pedidos.findIndex(p => p.id === idBuscar);
+
+    if (posicion !== -1) {
+
+        pedidos.splice(posicion, 1);
+
+        console.log("Pedido eliminado.");
+    } 
+    else {
+        console.log("ID no encontrado.");
+    }
+}
+
+
+// ==============================
+// COBRAR
+// ==============================
+function cobrar() {
+
+    let total = mostrarPedidos();
+
+    if (total > 0) {
+
+        let pago = Number(prompt("Pago del cliente: $"));
+
+        let cambio = pago - total;
+
+        console.log("Cambio: $" + cambio);
+        console.log("Gracias por su compra.");
+    }
+}
+
+
+// ==============================
+// MENÚ PRINCIPAL
+// ==============================
+while (opcion != 0) {
+
+    console.log("\n====================");
+    console.log("CAJA CAFETERÍA");
+    console.log("====================");
+    console.log("1. Agregar pedido");
+    console.log("2. Mostrar pedidos");
+    console.log("3. Actualizar pedido");
+    console.log("4. Eliminar pedido");
+    console.log("5. Cobrar");
     console.log("0. Salir");
 
     opcion = Number(prompt("Selecciona opción: "));
 
-    switch(opcion){
+    switch (opcion) {
 
         case 1:
-            agregarProducto();
+            agregarPedido();
             break;
 
         case 2:
-            mostrarCatalogo();
+            mostrarPedidos();
             break;
 
         case 3:
-            actualizarProducto();
+            actualizarPedido();
             break;
 
         case 4:
-            eliminarProducto();
+            eliminarPedido();
+            break;
+
+        case 5:
+            cobrar();
             break;
 
         case 0:
