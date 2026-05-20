@@ -1,6 +1,4 @@
-
 //   SISTEMA DE CAJA CAFETERÍA
-
 
 const prompt = require("prompt-sync")();
 
@@ -29,7 +27,7 @@ function mostrarPedidos() {
 
     console.log("\n===== TICKET =====");
 
-    let total = 0;
+    let subtotal = 0;
 
     if (pedidos.length === 0) {
         console.log("No hay pedidos.");
@@ -42,14 +40,22 @@ function mostrarPedidos() {
             (i + 1) + ". " +
             pedidos[i].nombre +
             " - $" +
-            pedidos[i].precio
+            pedidos[i].precio.toFixed(2)
         );
 
-        total += pedidos[i].precio;
+        subtotal += pedidos[i].precio;
     }
 
+    // Calcular IVA
+    let iva = subtotal * 0.16;
+
+    // Calcular total
+    let total = subtotal + iva;
+
     console.log("------------------");
-    console.log("TOTAL: $" + total);
+    console.log("SUBTOTAL: $" + subtotal.toFixed(2));
+    console.log("IVA (16%): $" + iva.toFixed(2));
+    console.log("TOTAL: $" + total.toFixed(2));
 
     return total;
 }
@@ -71,7 +77,9 @@ function actualizarPedido() {
         pedidos[posicion].precio = nuevoPrecio;
 
         console.log("Pedido actualizado.");
+
     } else {
+
         console.log("Número inválido.");
     }
 }
@@ -89,10 +97,13 @@ function eliminarPedido() {
         pedidos.splice(posicion, 1);
 
         console.log("Pedido eliminado.");
+
     } else {
+
         console.log("Número inválido.");
     }
 }
+
 
 // Cobrar
 function cobrar() {
@@ -103,16 +114,25 @@ function cobrar() {
 
         let pago = Number(prompt("Pago del cliente: $"));
 
-        let cambio = pago - total;
+        if (pago >= total) {
 
-        console.log("Cambio: $" + cambio);
-        console.log("Gracias por su compra.");
+            let cambio = pago - total;
+
+            console.log("------------------");
+            console.log("Pago: $" + pago.toFixed(2));
+            console.log("Cambio: $" + cambio.toFixed(2));
+            console.log("Gracias por su compra.");
+
+        } else {
+
+            console.log("Pago insuficiente.");
+        }
     }
 }
 
 
 
-// Menú
+// Menú principal
 
 while (opcion != 0) {
 
@@ -158,4 +178,3 @@ while (opcion != 0) {
             console.log("Opción inválida.");
     }
 }
-
