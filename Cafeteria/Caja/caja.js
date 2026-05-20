@@ -1,32 +1,17 @@
+//   SISTEMA DE CAJA CAFETERÍA
 
-// SISTEMA DE CAJA CAFETERÍA
-
-const readline = require("readline");
-
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+const prompt = require("prompt-sync")();
 
 const pedidos = [];
 
-// PREGUNTAR DATOS
-
-function preguntar(texto) {
-    return new Promise((resolve) => {
-        rl.question(texto, (respuesta) => {
-            resolve(respuesta);
-        });
-    });
-}
+let opcion = -1;
 
 
-// CREAR PEDIDO 
+// Crear pedido
+function agregarPedido() {
 
-async function agregarPedido() {
-
-    let nombre = await preguntar("Nombre del producto: ");
-    let precio = Number(await preguntar("Precio: $"));
+    let nombre = prompt("Nombre del producto: ");
+    let precio = Number(prompt("Precio: $"));
 
     pedidos.push({
         nombre: nombre,
@@ -37,7 +22,7 @@ async function agregarPedido() {
 }
 
 
-// MUESTRA LOS PEDIDOS 
+// Mostrar/Leer pedidos
 function mostrarPedidos() {
 
     console.log("\n===== TICKET =====");
@@ -61,34 +46,32 @@ function mostrarPedidos() {
         subtotal += pedidos[i].precio;
     }
 
+    // Calcular IVA
     let iva = subtotal * 0.16;
+
+    // Calcular total
     let total = subtotal + iva;
 
     console.log("------------------");
     console.log("SUBTOTAL: $" + subtotal.toFixed(2));
-    console.log("IVA : $" + iva.toFixed(2));
+    console.log("IVA (16%): $" + iva.toFixed(2));
     console.log("TOTAL: $" + total.toFixed(2));
 
     return total;
 }
 
 
-// ACTUALIZAR PEDIDOS 
-
-async function actualizarPedido() {
+// Actualizar pedido
+function actualizarPedido() {
 
     mostrarPedidos();
 
-    let posicion = Number(
-        await preguntar("Número de pedido a actualizar: ")
-    ) - 1;
+    let posicion = Number(prompt("Número de pedido a actualizar: ")) - 1;
 
     if (posicion >= 0 && posicion < pedidos.length) {
 
-        let nuevoNombre = await preguntar("Nuevo nombre: ");
-        let nuevoPrecio = Number(
-            await preguntar("Nuevo precio: $")
-        );
+        let nuevoNombre = prompt("Nuevo nombre: ");
+        let nuevoPrecio = Number(prompt("Nuevo precio: $"));
 
         pedidos[posicion].nombre = nuevoNombre;
         pedidos[posicion].precio = nuevoPrecio;
@@ -97,20 +80,17 @@ async function actualizarPedido() {
 
     } else {
 
-        console.log("Número no válido.");
+        console.log("Número inválido.");
     }
 }
 
 
-// ELIMINAR PEDIDOS 
-
-async function eliminarPedido() {
+// Eliminar pedido
+function eliminarPedido() {
 
     mostrarPedidos();
 
-    let posicion = Number(
-        await preguntar("Número de pedido a eliminar: ")
-    ) - 1;
+    let posicion = Number(prompt("Número de pedido a eliminar: ")) - 1;
 
     if (posicion >= 0 && posicion < pedidos.length) {
 
@@ -125,17 +105,14 @@ async function eliminarPedido() {
 }
 
 
-// COBRAR 
-
-async function cobrar() {
+// Cobrar
+function cobrar() {
 
     let total = mostrarPedidos();
 
     if (total > 0) {
 
-        let pago = Number(
-            await preguntar("Pago del cliente: $")
-        );
+        let pago = Number(prompt("Pago del cliente: $"));
 
         if (pago >= total) {
 
@@ -154,58 +131,50 @@ async function cobrar() {
 }
 
 
-// MENU PRINCIPAL 
-     
-async function menu() {
 
-    let opcion = -1;
+// Menú principal
 
-    while (opcion != 0) {
+while (opcion != 0) {
 
-        console.log("\n====================");
-        console.log("CAJA CAFETERÍA");
-        console.log("====================");
-        console.log("1. Agregar pedido");
-        console.log("2. Mostrar pedidos");
-        console.log("3. Actualizar pedido");
-        console.log("4. Eliminar pedido");
-        console.log("5. Cobrar");
-        console.log("0. Salir");
+    console.log("\n====================");
+    console.log("CAJA CAFETERÍA");
+    console.log("====================");
+    console.log("1. Agregar pedido");
+    console.log("2. Mostrar pedidos");
+    console.log("3. Actualizar pedido");
+    console.log("4. Eliminar pedido");
+    console.log("5. Cobrar");
+    console.log("0. Salir");
 
-        opcion = Number(
-            await preguntar("Selecciona opción: ")
-        );
+    opcion = Number(prompt("Selecciona opción: "));
 
-        switch (opcion) {
+    switch (opcion) {
 
-            case 1:
-                await agregarPedido();
-                break;
+        case 1:
+            agregarPedido();
+            break;
 
-            case 2:
-                mostrarPedidos();
-                break;
+        case 2:
+            mostrarPedidos();
+            break;
 
-            case 3:
-                await actualizarPedido();
-                break;
+        case 3:
+            actualizarPedido();
+            break;
 
-            case 4:
-                await eliminarPedido();
-                break;
+        case 4:
+            eliminarPedido();
+            break;
 
-            case 5:
-                await cobrar();
-                break;
+        case 5:
+            cobrar();
+            break;
 
-            case 0:
-                console.log("Sistema cerrado.");
-                rl.close();
-                break;
+        case 0:
+            console.log("Sistema cerrado.");
+            break;
 
-            default:
-                console.log("Opción inválida.");
-        }
+        default:
+            console.log("Opción inválida.");
     }
 }
-menu();
